@@ -18,6 +18,11 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuAnchorType
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -27,6 +32,9 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -36,6 +44,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.garoluis.anotherlifecounter.domain.model.Player
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SetupScreen(
     onStartGame: (List<Player>) -> Unit,
@@ -44,10 +53,6 @@ fun SetupScreen(
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
     val activity = context as? ComponentActivity
-
-    LaunchedEffect(Unit) {
-        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-    }
 
     DisposableEffect(Unit) {
         onDispose {
@@ -129,6 +134,13 @@ fun SetupScreen(
                 .fillMaxWidth()
         ) {
             itemsIndexed(uiState.commanderNames.take(uiState.playerCount)) { index, name ->
+                val suggestions = uiState.commanderSuggestions[index] ?: emptyList()
+                var expanded by remember { mutableStateOf(false) }
+
+                LaunchedEffect(suggestions) {
+                    expanded = suggestions.isNotEmpty()
+                }
+
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     colors = CardDefaults.cardColors(
@@ -145,18 +157,46 @@ fun SetupScreen(
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.padding(bottom = 6.dp)
                         )
-                        OutlinedTextField(
-                            value = name,
-                            onValueChange = { viewModel.updateCommanderName(index, it) },
-                            label = { Text("Name") },
-                            singleLine = true,
-                            modifier = Modifier.fillMaxWidth(),
-                            colors = OutlinedTextFieldDefaults.colors(
-                                focusedBorderColor = MaterialTheme.colorScheme.primary,
-                                unfocusedBorderColor = MaterialTheme.colorScheme.outline,
-                                focusedLabelColor = MaterialTheme.colorScheme.primary
+                        ExposedDropdownMenuBox(
+                            expanded = expanded,
+                            onExpandedChange = { expanded = it }
+                        ) {
+                            OutlinedTextField(
+                                value = name,
+                                onValueChange = { viewModel.updateCommanderName(index, it) },
+                                label = { Text("Commander") },
+                                singleLine = true,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable),
+                                colors = OutlinedTextFieldDefaults.colors(
+                                    focusedBorderColor = MaterialTheme.colorScheme.primary,
+                                    unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+                                    focusedLabelColor = MaterialTheme.colorScheme.primary
+                                ),
+                                trailingIcon = {
+                                    ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
+                                }
                             )
-                        )
+                            ExposedDropdownMenu(
+                                expanded = expanded,
+                                onDismissRequest = {
+                                    expanded = false
+                                    viewModel.dismissSuggestions(index)
+                                }
+                            ) {
+                                suggestions.forEach { suggestion ->
+                                    DropdownMenuItem(
+                                        text = { Text(suggestion) },
+                                        onClick = {
+                                            viewModel.updateCommanderName(index, suggestion)
+                                            expanded = false
+                                            viewModel.dismissSuggestions(index)
+                                        }
+                                    )
+                                }
+                            }
+                        }
                     }
                 }
             }
