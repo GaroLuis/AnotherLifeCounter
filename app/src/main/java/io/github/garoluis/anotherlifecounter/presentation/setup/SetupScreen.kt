@@ -43,6 +43,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -59,6 +60,7 @@ fun SetupScreen(
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
     val activity = context as? ComponentActivity
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     DisposableEffect(Unit) {
         onDispose {
@@ -195,9 +197,10 @@ fun SetupScreen(
                                     DropdownMenuItem(
                                         text = { Text(suggestion) },
                                         onClick = {
-                                            viewModel.updateCommanderName(index, suggestion)
+                                            viewModel.selectCommanderName(index, suggestion)
                                             expanded = false
                                             viewModel.dismissSuggestions(index)
+                                            keyboardController?.hide()
                                         }
                                     )
                                 }

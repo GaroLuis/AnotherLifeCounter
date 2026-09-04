@@ -28,7 +28,8 @@ fun PlayerPanel(
     rotationZ: Float,
     onLifeChange: (Int) -> Unit,
     onDamageChange: (Int, Int) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    damageWeight: Float = 0.6f
 ) {
     val playerIndex = players.indexOfFirst { it.id == player.id }
     val accentColor = playerAccents.getOrElse(playerIndex) { Player1Accent }
@@ -63,7 +64,7 @@ fun PlayerPanel(
         )
 
         Column(
-            modifier = Modifier.weight(0.6f),
+            modifier = Modifier.weight(damageWeight),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             players

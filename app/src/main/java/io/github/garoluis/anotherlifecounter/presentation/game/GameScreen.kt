@@ -140,7 +140,8 @@ private fun TwoPlayerLayout(
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .weight(1f)
+                .weight(1f),
+            damageWeight = 0.3f
         )
         HorizontalDivider()
         PlayerPanel(
@@ -153,7 +154,8 @@ private fun TwoPlayerLayout(
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .weight(1f)
+                .weight(1f),
+            damageWeight = 0.3f
         )
     }
 }
@@ -208,7 +210,8 @@ private fun ThreePlayerLayout(
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .weight(1f)
+                .weight(1f),
+            damageWeight = 0.3f
         )
     }
 }

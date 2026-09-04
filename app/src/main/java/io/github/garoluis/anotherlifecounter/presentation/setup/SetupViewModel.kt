@@ -42,6 +42,15 @@ class SetupViewModel(
         }
     }
 
+    fun selectCommanderName(index: Int, name: String) {
+        searchJobs[index]?.cancel()
+        val currentNames = _uiState.value.commanderNames.toMutableList()
+        if (index in currentNames.indices) {
+            currentNames[index] = name
+            _uiState.value = _uiState.value.copy(commanderNames = currentNames)
+        }
+    }
+
     private fun searchCommanders(index: Int, query: String) {
         searchJobs[index]?.cancel()
         if (query.length < 3) {

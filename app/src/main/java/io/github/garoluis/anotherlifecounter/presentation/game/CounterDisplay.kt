@@ -53,7 +53,9 @@ fun CounterDisplay(
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 maxLines = 1,
-                modifier = Modifier.padding(horizontal = 4.dp)
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(horizontal = 4.dp)
             )
         }
 
