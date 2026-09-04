@@ -2,7 +2,6 @@ package io.github.garoluis.anotherlifecounter.data.local
 
 import io.github.garoluis.anotherlifecounter.domain.model.Player
 import kotlinx.coroutines.flow.Flow
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 class GameHistoryRepository(private val dao: GameHistoryDao) {
