@@ -7,7 +7,8 @@ data class Player(
     val id: Int,
     val name: String,
     val life: Int = 40,
-    val commanderDamage: Map<Int, Int> = emptyMap()
+    val commanderDamage: Map<Int, Int> = emptyMap(),
+    val isStartingPlayer: Boolean = false
 ) {
     companion object {
         const val DEFAULT_LIFE = 40

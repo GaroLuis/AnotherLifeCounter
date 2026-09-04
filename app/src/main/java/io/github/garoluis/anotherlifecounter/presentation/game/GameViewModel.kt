@@ -24,7 +24,9 @@ class GameViewModel(
     val uiState: StateFlow<GameUiState> = _uiState.asStateFlow()
 
     fun initializePlayers(players: List<Player>) {
-        _uiState.value = GameUiState(players = players)
+        val startingId = if (players.isNotEmpty()) players.random().id else null
+        val updatedPlayers = players.map { it.copy(isStartingPlayer = it.id == startingId) }
+        _uiState.value = GameUiState(players = updatedPlayers)
     }
 
     fun updateLife(playerId: Int, delta: Int) {
