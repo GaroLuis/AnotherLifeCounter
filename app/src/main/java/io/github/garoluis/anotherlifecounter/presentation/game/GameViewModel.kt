@@ -1,19 +1,23 @@
 package io.github.garoluis.anotherlifecounter.presentation.game
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import io.github.garoluis.anotherlifecounter.data.local.GameHistoryRepository
 import io.github.garoluis.anotherlifecounter.domain.model.Player
 import io.github.garoluis.anotherlifecounter.domain.usecase.GameUseCases
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 data class GameUiState(
     val players: List<Player> = emptyList()
 )
 
 class GameViewModel(
-    private val gameUseCases: GameUseCases = GameUseCases()
+    private val gameUseCases: GameUseCases = GameUseCases(),
+    private val repository: GameHistoryRepository? = null
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(GameUiState())
@@ -46,6 +50,13 @@ class GameViewModel(
                 }
             }
             state.copy(players = updatedPlayers)
+        }
+    }
+
+    fun saveGame() {
+        val repo = repository ?: return
+        viewModelScope.launch {
+            repo.saveGame(_uiState.value.players)
         }
     }
 }

@@ -48,7 +48,7 @@ fun PlayerPanel(
             color = accentColor,
             textAlign = TextAlign.Center,
             maxLines = 1,
-            modifier = Modifier.padding(top = 4.dp, bottom = 2.dp)
+            modifier = Modifier.padding(top = 18.dp, bottom = 2.dp)
         )
 
         CounterDisplay(

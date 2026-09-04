@@ -9,7 +9,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Save
+import androidx.compose.material3.FloatingActionButtonDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -24,7 +29,6 @@ import io.github.garoluis.anotherlifecounter.domain.model.Player
 
 fun getPlayerRotation(playerIndex: Int, totalPlayers: Int): Float {
     return when (totalPlayers) {
-        1 -> 0f
         2 -> when (playerIndex) {
             0 -> 180f
             1 -> 0f
@@ -97,34 +101,26 @@ fun GameScreen(
     val uiState by viewModel.uiState.collectAsState()
     val playerCount = uiState.players.size
 
-    when (playerCount) {
-        1 -> SinglePlayerLayout(uiState.players, viewModel)
-        2 -> TwoPlayerLayout(uiState.players, viewModel)
-        3 -> ThreePlayerLayout(uiState.players, viewModel)
-        4 -> FourPlayerLayout(uiState.players, viewModel)
-    }
-}
+    Box(modifier = Modifier.fillMaxSize()) {
+        when (playerCount) {
+            2 -> TwoPlayerLayout(uiState.players, viewModel)
+            3 -> ThreePlayerLayout(uiState.players, viewModel)
+            4 -> FourPlayerLayout(uiState.players, viewModel)
+        }
 
-@Composable
-private fun SinglePlayerLayout(
-    players: List<Player>,
-    viewModel: GameViewModel
-) {
-    val player = players.firstOrNull() ?: return
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        PlayerPanel(
-            player = player,
-            players = players,
-            rotationZ = 0f,
-            onLifeChange = { delta -> viewModel.updateLife(player.id, delta) },
-            onDamageChange = { opponentId, delta ->
-                viewModel.updateCommanderDamage(player.id, opponentId, delta)
-            },
-            modifier = Modifier.fillMaxSize()
-        )
+        SmallFloatingActionButton(
+            onClick = { viewModel.saveGame() },
+            containerColor = MaterialTheme.colorScheme.primaryContainer,
+            contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+            elevation = FloatingActionButtonDefaults.elevation(defaultElevation = 2.dp),
+            modifier = Modifier.align(Alignment.Center)
+        ) {
+            Icon(
+                imageVector = Icons.Default.Save,
+                contentDescription = "Save Game",
+                modifier = Modifier.height(18.dp)
+            )
+        }
     }
 }
 
