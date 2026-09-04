@@ -3,6 +3,7 @@ package io.github.garoluis.anotherlifecounter.presentation.setup
 import android.content.pm.ActivityInfo
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,6 +17,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -183,7 +185,22 @@ fun SetupScreen(
                                     focusedLabelColor = MaterialTheme.colorScheme.primary
                                 ),
                                 trailingIcon = {
-                                    ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
+                                    Row(verticalAlignment = Alignment.CenterVertically) {
+                                        if (name.isNotEmpty()) {
+                                            Icon(
+                                                imageVector = Icons.Default.Close,
+                                                contentDescription = "Clear",
+                                                modifier = Modifier
+                                                    .size(20.dp)
+                                                    .clickable {
+                                                        viewModel.updateCommanderName(index, "")
+                                                        viewModel.dismissSuggestions(index)
+                                                    },
+                                                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                                            )
+                                        }
+                                        ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
+                                    }
                                 }
                             )
                             ExposedDropdownMenu(
