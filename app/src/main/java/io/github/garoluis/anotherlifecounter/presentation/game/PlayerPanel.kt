@@ -36,12 +36,13 @@ fun PlayerPanel(
 ) {
     val playerIndex = players.indexOfFirst { it.id == player.id }
     val accentColor = playerAccents.getOrElse(playerIndex) { Player1Accent }
+    val scale = rememberScreenScale()
 
     Column(
         modifier = modifier
             .graphicsLayer(rotationZ = rotationZ)
             .background(MaterialTheme.colorScheme.surface)
-            .padding(6.dp),
+            .padding(6.dp.scaled(scale)),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
@@ -52,13 +53,13 @@ fun PlayerPanel(
             color = accentColor,
             textAlign = TextAlign.Center,
             maxLines = 1,
-            modifier = Modifier.padding(top = 18.dp, bottom = 2.dp)
+            modifier = Modifier.padding(top = 18.dp.scaled(scale), bottom = 2.dp.scaled(scale))
         )
 
         if (player.isStartingPlayer) {
             Box(
                 modifier = Modifier
-                    .size(8.dp)
+                    .size(8.dp.scaled(scale))
                     .clip(CircleShape)
                     .background(accentColor)
             )

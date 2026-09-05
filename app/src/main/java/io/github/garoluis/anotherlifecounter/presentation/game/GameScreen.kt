@@ -114,6 +114,7 @@ fun GameScreen(
         animationSpec = tween(durationMillis = 200),
         label = "saveScale"
     )
+    val screenScale = rememberScreenScale()
 
     Box(modifier = Modifier.fillMaxSize()) {
         when (playerCount) {
@@ -142,7 +143,7 @@ fun GameScreen(
                 Icon(
                     imageVector = if (saved) Icons.Default.Check else Icons.Default.Save,
                     contentDescription = if (saved) "Saved" else "Save Game",
-                    modifier = Modifier.height(if (saved) 22.dp else 18.dp)
+                    modifier = Modifier.height(if (saved) 22.dp.scaled(screenScale) else 18.dp.scaled(screenScale))
                 )
             }
         }
