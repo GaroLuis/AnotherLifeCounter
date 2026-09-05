@@ -28,9 +28,10 @@ class GameUseCases {
         delta: Int
     ): Player {
         val currentDamage = player.commanderDamage[opponentId] ?: Player.DEFAULT_DAMAGE
-        val newDamage = currentDamage + delta
+        val newDamage = (currentDamage + delta).coerceAtLeast(0)
+        val actualDelta = newDamage - currentDamage
         return player.copy(
-            life = player.life - delta,
+            life = player.life - actualDelta,
             commanderDamage = player.commanderDamage + (opponentId to newDamage)
         )
     }
