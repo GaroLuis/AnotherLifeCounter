@@ -32,6 +32,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.layout
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.garoluis.anotherlifecounter.domain.model.Player
 
@@ -77,6 +78,27 @@ private fun Modifier.rotatedLayout(rotationZ: Float): Modifier {
     }
 }
 
+private fun Modifier.landscapeRotation(isLandscape: Boolean): Modifier {
+    if (!isLandscape) return this
+    return graphicsLayer(rotationZ = 270f)
+        .layout { measurable, constraints ->
+            val swapped = measurable.measure(
+                Constraints(
+                    minWidth = constraints.maxHeight,
+                    maxWidth = constraints.maxHeight,
+                    minHeight = constraints.maxWidth,
+                    maxHeight = constraints.maxWidth
+                )
+            )
+            layout(constraints.maxWidth, constraints.maxHeight) {
+                swapped.placeRelative(
+                    x = (constraints.maxWidth - swapped.width) / 2,
+                    y = (constraints.maxHeight - swapped.height) / 2
+                )
+            }
+        }
+}
+
 @Composable
 private fun HorizontalDivider() {
     Box(
@@ -116,11 +138,16 @@ fun GameScreen(
     )
     val screenScale = rememberScreenScale()
 
+    val configuration = LocalConfiguration.current
+    val isLandscape = configuration.screenWidthDp > configuration.screenHeightDp
+
     Box(modifier = Modifier.fillMaxSize()) {
-        when (playerCount) {
-            2 -> TwoPlayerLayout(uiState.players, viewModel)
-            3 -> ThreePlayerLayout(uiState.players, viewModel)
-            4 -> FourPlayerLayout(uiState.players, viewModel)
+        Box(modifier = Modifier.fillMaxSize().landscapeRotation(isLandscape)) {
+            when (playerCount) {
+                2 -> TwoPlayerLayout(uiState.players, viewModel)
+                3 -> ThreePlayerLayout(uiState.players, viewModel)
+                4 -> FourPlayerLayout(uiState.players, viewModel)
+            }
         }
 
         SmallFloatingActionButton(

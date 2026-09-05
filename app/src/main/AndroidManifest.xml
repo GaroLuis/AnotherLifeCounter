@@ -14,7 +14,7 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:screenOrientation="portrait"
+
             android:theme="@style/Theme.AnotherLifeCounter.Splash"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
