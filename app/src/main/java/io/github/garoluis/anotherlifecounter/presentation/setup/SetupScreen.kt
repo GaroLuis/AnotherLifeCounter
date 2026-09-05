@@ -16,6 +16,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.History
@@ -74,6 +76,7 @@ fun SetupScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
+            .verticalScroll(rememberScrollState())
             .padding(20.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -135,97 +138,107 @@ fun SetupScreen(
             modifier = Modifier.padding(bottom = 12.dp)
         )
 
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(2),
-            horizontalArrangement = Arrangement.spacedBy(10.dp),
+        Column(
             verticalArrangement = Arrangement.spacedBy(10.dp),
-            modifier = Modifier
-                .weight(1f)
-                .fillMaxWidth()
+            modifier = Modifier.fillMaxWidth()
         ) {
-            itemsIndexed(uiState.commanderNames.take(uiState.playerCount)) { index, name ->
-                val suggestions = uiState.commanderSuggestions[index] ?: emptyList()
-                var expanded by remember { mutableStateOf(false) }
-
-                LaunchedEffect(suggestions) {
-                    expanded = suggestions.isNotEmpty()
-                }
-
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.surfaceVariant
-                    ),
-                    shape = MaterialTheme.shapes.medium
-                ) {
-                    Column(
-                        modifier = Modifier.padding(14.dp)
+            uiState.commanderNames.take(uiState.playerCount)
+                .mapIndexed { index, name -> index to name }
+                .chunked(2)
+                .forEach { row ->
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(10.dp),
+                        modifier = Modifier.fillMaxWidth()
                     ) {
-                        Text(
-                            text = "Player ${index + 1}",
-                            style = MaterialTheme.typography.labelMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            modifier = Modifier.padding(bottom = 6.dp)
-                        )
-                        ExposedDropdownMenuBox(
-                            expanded = expanded,
-                            onExpandedChange = { expanded = it }
-                        ) {
-                            OutlinedTextField(
-                                value = name,
-                                onValueChange = { viewModel.updateCommanderName(index, it) },
-                                label = { Text("Commander") },
-                                singleLine = true,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable),
-                                colors = OutlinedTextFieldDefaults.colors(
-                                    focusedBorderColor = MaterialTheme.colorScheme.primary,
-                                    unfocusedBorderColor = MaterialTheme.colorScheme.outline,
-                                    focusedLabelColor = MaterialTheme.colorScheme.primary
+                        row.forEach { (index, name) ->
+                            val suggestions = uiState.commanderSuggestions[index] ?: emptyList()
+                            var expanded by remember { mutableStateOf(false) }
+
+                            LaunchedEffect(suggestions) {
+                                expanded = suggestions.isNotEmpty()
+                            }
+
+                            Card(
+                                modifier = Modifier.weight(1f),
+                                colors = CardDefaults.cardColors(
+                                    containerColor = MaterialTheme.colorScheme.surfaceVariant
                                 ),
-                                trailingIcon = {
-                                    Row(verticalAlignment = Alignment.CenterVertically) {
-                                        if (name.isNotEmpty()) {
-                                            Icon(
-                                                imageVector = Icons.Default.Close,
-                                                contentDescription = "Clear",
-                                                modifier = Modifier
-                                                    .size(20.dp)
-                                                    .clickable {
-                                                        viewModel.updateCommanderName(index, "")
-                                                        viewModel.dismissSuggestions(index)
-                                                    },
-                                                tint = MaterialTheme.colorScheme.onSurfaceVariant
-                                            )
-                                        }
-                                        ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
-                                    }
-                                }
-                            )
-                            ExposedDropdownMenu(
-                                expanded = expanded,
-                                onDismissRequest = {
-                                    expanded = false
-                                    viewModel.dismissSuggestions(index)
-                                }
+                                shape = MaterialTheme.shapes.medium
                             ) {
-                                suggestions.forEach { suggestion ->
-                                    DropdownMenuItem(
-                                        text = { Text(suggestion) },
-                                        onClick = {
-                                            viewModel.selectCommanderName(index, suggestion)
-                                            expanded = false
-                                            viewModel.dismissSuggestions(index)
-                                            keyboardController?.hide()
-                                        }
+                                Column(
+                                    modifier = Modifier.padding(14.dp)
+                                ) {
+                                    Text(
+                                        text = "Player ${index + 1}",
+                                        style = MaterialTheme.typography.labelMedium,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                        modifier = Modifier.padding(bottom = 6.dp)
                                     )
+                                    ExposedDropdownMenuBox(
+                                        expanded = expanded,
+                                        onExpandedChange = { expanded = it }
+                                    ) {
+                                        OutlinedTextField(
+                                            value = name,
+                                            onValueChange = { viewModel.updateCommanderName(index, it) },
+                                            label = { Text("Commander") },
+                                            singleLine = true,
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable),
+                                            colors = OutlinedTextFieldDefaults.colors(
+                                                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                                                unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+                                                focusedLabelColor = MaterialTheme.colorScheme.primary
+                                            ),
+                                            trailingIcon = {
+                                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                                    if (name.isNotEmpty()) {
+                                                        Icon(
+                                                            imageVector = Icons.Default.Close,
+                                                            contentDescription = "Clear",
+                                                            modifier = Modifier
+                                                                .size(20.dp)
+                                                                .clickable {
+                                                                    viewModel.updateCommanderName(index, "")
+                                                                    viewModel.dismissSuggestions(index)
+                                                                },
+                                                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                                                        )
+                                                    }
+                                                    ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
+                                                }
+                                            }
+                                        )
+                                        ExposedDropdownMenu(
+                                            expanded = expanded,
+                                            onDismissRequest = {
+                                                expanded = false
+                                                viewModel.dismissSuggestions(index)
+                                            }
+                                        ) {
+                                            suggestions.forEach { suggestion ->
+                                                DropdownMenuItem(
+                                                    text = { Text(suggestion) },
+                                                    onClick = {
+                                                        viewModel.selectCommanderName(index, suggestion)
+                                                        expanded = false
+                                                        viewModel.dismissSuggestions(index)
+                                                        keyboardController?.hide()
+                                                    }
+                                                )
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }
+                        // Fill remaining space if odd number of players
+                        if (row.size < 2) {
+                            Spacer(modifier = Modifier.weight(1f))
+                        }
                     }
                 }
-            }
         }
 
         Spacer(modifier = Modifier.height(16.dp))
