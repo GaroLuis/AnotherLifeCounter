@@ -13,7 +13,7 @@ class GameUseCases {
         return (0 until count).map { index ->
             Player(
                 id = index,
-                name = names.getOrElse(index) { "Commander ${index + 1}" }
+                name = names.getOrElse(index) { "" }.ifBlank { "Commander ${index + 1}" }
             )
         }
     }
