@@ -5,14 +5,17 @@ import androidx.lifecycle.viewModelScope
 import io.github.garoluis.anotherlifecounter.data.local.GameHistoryRepository
 import io.github.garoluis.anotherlifecounter.domain.model.Player
 import io.github.garoluis.anotherlifecounter.domain.usecase.GameUseCases
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.milliseconds
 
 data class GameUiState(
-    val players: List<Player> = emptyList()
+    val players: List<Player> = emptyList(),
+    val isSaved: Boolean = false
 )
 
 class GameViewModel(
@@ -59,6 +62,9 @@ class GameViewModel(
         val repo = repository ?: return
         viewModelScope.launch {
             repo.saveGame(_uiState.value.players)
+            _uiState.update { it.copy(isSaved = true) }
+            delay(1500.milliseconds)
+            _uiState.update { it.copy(isSaved = false) }
         }
     }
 }

@@ -1,5 +1,11 @@
 package io.github.garoluis.anotherlifecounter.presentation.game
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,6 +16,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
@@ -21,6 +28,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.layout
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
@@ -101,6 +109,12 @@ fun GameScreen(
     val uiState by viewModel.uiState.collectAsState()
     val playerCount = uiState.players.size
 
+    val scale by animateFloatAsState(
+        targetValue = if (uiState.isSaved) 1.2f else 1f,
+        animationSpec = tween(durationMillis = 200),
+        label = "saveScale"
+    )
+
     Box(modifier = Modifier.fillMaxSize()) {
         when (playerCount) {
             2 -> TwoPlayerLayout(uiState.players, viewModel)
@@ -113,13 +127,24 @@ fun GameScreen(
             containerColor = MaterialTheme.colorScheme.primaryContainer,
             contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
             elevation = FloatingActionButtonDefaults.elevation(defaultElevation = 2.dp),
-            modifier = Modifier.align(Alignment.Center)
+            modifier = Modifier
+                .align(Alignment.Center)
+                .graphicsLayer {
+                    scaleX = scale
+                    scaleY = scale
+                }
         ) {
-            Icon(
-                imageVector = Icons.Default.Save,
-                contentDescription = "Save Game",
-                modifier = Modifier.height(18.dp)
-            )
+            AnimatedContent(
+                targetState = uiState.isSaved,
+                transitionSpec = { fadeIn(tween(100)) togetherWith fadeOut(tween(100)) },
+                label = "saveIcon"
+            ) { saved ->
+                Icon(
+                    imageVector = if (saved) Icons.Default.Check else Icons.Default.Save,
+                    contentDescription = if (saved) "Saved" else "Save Game",
+                    modifier = Modifier.height(if (saved) 22.dp else 18.dp)
+                )
+            }
         }
     }
 }
