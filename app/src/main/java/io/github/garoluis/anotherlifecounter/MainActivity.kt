@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.ui.Modifier
 import androidx.core.graphics.toColorInt
-import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import androidx.navigation.compose.rememberNavController
 import io.github.garoluis.anotherlifecounter.presentation.navigation.AppNavGraph
@@ -21,7 +20,6 @@ import io.github.garoluis.anotherlifecounter.ui.theme.AnotherLifeCounterTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-        installSplashScreen()
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         window.decorView.setBackgroundColor("#121218".toColorInt())

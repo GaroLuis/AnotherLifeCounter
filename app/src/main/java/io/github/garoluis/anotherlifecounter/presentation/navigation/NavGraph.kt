@@ -14,11 +14,9 @@ import io.github.garoluis.anotherlifecounter.presentation.game.GameViewModel
 import io.github.garoluis.anotherlifecounter.presentation.history.HistoryScreen
 import io.github.garoluis.anotherlifecounter.presentation.history.HistoryViewModel
 import io.github.garoluis.anotherlifecounter.presentation.setup.SetupScreen
-import io.github.garoluis.anotherlifecounter.presentation.splash.SplashScreen
 import kotlinx.serialization.json.Json
 
 object Routes {
-    const val SPLASH = "splash"
     const val SETUP = "setup"
     const val GAME = "game/{players}"
     const val HISTORY = "history"
@@ -32,18 +30,8 @@ fun AppNavGraph(navController: NavHostController) {
 
     NavHost(
         navController = navController,
-        startDestination = Routes.SPLASH
+        startDestination = Routes.SETUP
     ) {
-        composable(Routes.SPLASH) {
-            SplashScreen(
-                onFinished = {
-                    navController.navigate(Routes.SETUP) {
-                        popUpTo(Routes.SPLASH) { inclusive = true }
-                    }
-                }
-            )
-        }
-
         composable(Routes.SETUP) {
             SetupScreen(
                 onStartGame = { players ->
