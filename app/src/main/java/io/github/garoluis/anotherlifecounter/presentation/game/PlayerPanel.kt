@@ -1,17 +1,19 @@
 package io.github.garoluis.anotherlifecounter.presentation.game
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -45,23 +47,28 @@ fun PlayerPanel(
             .padding(6.dp.scaled(scale)),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(
-            text = player.name,
-            style = MaterialTheme.typography.titleSmall.copy(
-                fontWeight = FontWeight.Bold
-            ),
-            color = accentColor,
-            textAlign = TextAlign.Center,
-            maxLines = 1,
-            modifier = Modifier.padding(top = 18.dp.scaled(scale), bottom = 2.dp.scaled(scale))
-        )
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ) {
+            if (player.isStartingPlayer) {
+                Icon(
+                    imageVector = Icons.Default.Star,
+                    contentDescription = null,
+                    tint = accentColor,
+                    modifier = Modifier.height(15.dp)
+                )
+            }
 
-        if (player.isStartingPlayer) {
-            Box(
-                modifier = Modifier
-                    .size(8.dp.scaled(scale))
-                    .clip(CircleShape)
-                    .background(accentColor)
+            Text(
+                text = player.name,
+                style = MaterialTheme.typography.titleSmall.copy(
+                    fontWeight = FontWeight.Bold
+                ),
+                color = accentColor,
+                textAlign = TextAlign.Center,
+                maxLines = 1,
+                modifier = Modifier.padding(top = 18.dp.scaled(scale), bottom = 2.dp.scaled(scale))
             )
         }
 

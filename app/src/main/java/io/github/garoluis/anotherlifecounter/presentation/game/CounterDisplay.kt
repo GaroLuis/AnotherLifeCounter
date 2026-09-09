@@ -1,24 +1,28 @@
 package io.github.garoluis.anotherlifecounter.presentation.game
 
-import android.util.Log
-import androidx.compose.foundation.combinedClickable
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.waitForUpOrCancellation
-import androidx.compose.foundation.interaction.InteractionSource
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
@@ -37,14 +41,20 @@ import kotlin.time.Duration.Companion.milliseconds
 fun CounterDisplay(
     value: Int,
     label: String?,
+    modifier: Modifier = Modifier,
     onIncrement: () -> Unit,
     onDecrement: () -> Unit,
     isLarge: Boolean = false,
     incrementColor: androidx.compose.ui.graphics.Color = MaterialTheme.colorScheme.primary,
-    decrementColor: androidx.compose.ui.graphics.Color = MaterialTheme.colorScheme.primary,
-    modifier: Modifier = Modifier
+    decrementColor: androidx.compose.ui.graphics.Color = MaterialTheme.colorScheme.primary
 ) {
+    var originalValue by remember { mutableIntStateOf(value) }
     val scale = rememberScreenScale()
+
+    LaunchedEffect(value) {
+        delay(5000.milliseconds)
+        originalValue = value
+    }
 
     Row(
         modifier = modifier.fillMaxWidth(),
@@ -58,7 +68,9 @@ fun CounterDisplay(
                 .repeatingClickable(
                     onClick = onDecrement,
                 ),
-            contentPadding = if (isLarge) ButtonDefaults.TextButtonContentPadding else PaddingValues(0.dp),
+            contentPadding = if (isLarge) ButtonDefaults.TextButtonContentPadding else PaddingValues(
+                0.dp
+            ),
             colors = ButtonDefaults.textButtonColors(
                 contentColor = decrementColor
             )
@@ -82,24 +94,50 @@ fun CounterDisplay(
             )
         }
 
-        Text(
-            text = "$value",
-            style = if (isLarge) {
-                MaterialTheme.typography.displayLarge.copy(
-                    fontWeight = FontWeight.Black,
-                    fontSize = 60.sp.scaled(scale)
-                )
-            } else {
-                MaterialTheme.typography.headlineSmall.copy(
-                    fontWeight = FontWeight.Bold
-                )
-            },
-            textAlign = TextAlign.Center,
-            color = MaterialTheme.colorScheme.onSurface,
+        Box(
             modifier = Modifier
                 .weight(1f)
-                .padding(horizontal = 4.dp.scaled(scale))
-        )
+                .padding(horizontal = 4.dp.scaled(scale)),
+        ) {
+
+            androidx.compose.animation.AnimatedVisibility(
+                visible = isLarge && value != originalValue,
+                enter = fadeIn(),
+                exit = fadeOut()
+            ) {
+                Text(
+                    text = if (originalValue < value) {
+                        "+${value - originalValue}"
+                    } else {
+                        "${value - originalValue}"
+                    },
+                    style = MaterialTheme.typography.displayLarge.copy(
+                        fontWeight = FontWeight.Black,
+                        fontSize = 15.sp.scaled(scale)
+                    ),
+                    textAlign = TextAlign.Right,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier.fillMaxWidth(0.75f)
+                )
+            }
+
+            Text(
+                text = "$value",
+                style = if (isLarge) {
+                    MaterialTheme.typography.displayLarge.copy(
+                        fontWeight = FontWeight.Black,
+                        fontSize = 60.sp.scaled(scale)
+                    )
+                } else {
+                    MaterialTheme.typography.headlineSmall.copy(
+                        fontWeight = FontWeight.Bold
+                    )
+                },
+                textAlign = TextAlign.Center,
+                color = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
 
         TextButton(
             onClick = {},
@@ -108,7 +146,9 @@ fun CounterDisplay(
                 .repeatingClickable(
                     onClick = onIncrement,
                 ),
-            contentPadding = if (isLarge) ButtonDefaults.TextButtonContentPadding else PaddingValues(0.dp),
+            contentPadding = if (isLarge) ButtonDefaults.TextButtonContentPadding else PaddingValues(
+                0.dp
+            ),
             colors = ButtonDefaults.textButtonColors(
                 contentColor = incrementColor
             )
@@ -141,7 +181,8 @@ fun Modifier.repeatingClickable(
                     while (down.pressed) {
                         currentClickListener()
                         delay(currentDelayMillis.milliseconds)
-                        val nextMillis = currentDelayMillis - (currentDelayMillis * delayDecayFactor)
+                        val nextMillis =
+                            currentDelayMillis - (currentDelayMillis * delayDecayFactor)
                         currentDelayMillis = nextMillis.toLong().coerceAtLeast(minDelayMillis)
                     }
                 }
