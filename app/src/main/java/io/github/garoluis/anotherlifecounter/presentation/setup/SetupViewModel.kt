@@ -13,10 +13,15 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.milliseconds
 
+data class Suggestions(
+    val data: List<String>,
+    val isLoading: Boolean,
+)
+
 data class SetupUiState(
     val playerCount: Int = 2,
     val commanderNames: List<String> = List(4) { "" },
-    val commanderSuggestions: Map<Int, List<String>> = emptyMap(),
+    val commanderSuggestions: Map<Int, Suggestions> = emptyMap(),
     val players: List<Player> = emptyList()
 )
 
@@ -59,11 +64,20 @@ class SetupViewModel(
             )
             return
         }
+
+        _uiState.value = _uiState.value.copy(
+            commanderSuggestions = _uiState.value.commanderSuggestions +
+                    (index to Suggestions(data = emptyList(), isLoading = true))
+        )
+
         searchJobs[index] = viewModelScope.launch {
             delay(300.milliseconds)
             val results = ScryfallApi.searchCommanders(query)
             _uiState.value = _uiState.value.copy(
-                commanderSuggestions = _uiState.value.commanderSuggestions + (index to results)
+                commanderSuggestions = _uiState.value.commanderSuggestions + (index to Suggestions(
+                    data = results,
+                    isLoading = false
+                ))
             )
         }
     }

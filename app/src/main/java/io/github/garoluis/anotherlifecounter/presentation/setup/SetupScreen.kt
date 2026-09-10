@@ -25,6 +25,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -146,9 +147,8 @@ fun SetupScreen(
                     }
 
 
-                    Row(
+                    Box(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Start
                     ) {
                         IconButton(
                             onClick = {
@@ -227,8 +227,10 @@ fun SetupScreen(
                                 modifier = Modifier.fillMaxWidth()
                             ) {
                                 row.forEach { (index, name) ->
-                                    val suggestions =
-                                        uiState.commanderSuggestions[index] ?: emptyList()
+                                    val suggestionsObj = uiState.commanderSuggestions[index]
+
+
+                                    val suggestions = suggestionsObj?.data ?: emptyList()
                                     var expanded by remember { mutableStateOf(false) }
 
                                     LaunchedEffect(suggestions) {
@@ -245,12 +247,29 @@ fun SetupScreen(
                                         Column(
                                             modifier = Modifier.padding(14.dp)
                                         ) {
-                                            Text(
-                                                text = "Commander ${index + 1}",
-                                                style = MaterialTheme.typography.labelMedium,
-                                                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                                modifier = Modifier.padding(bottom = 6.dp)
-                                            )
+                                            Row(
+                                                Modifier.fillMaxWidth(),
+                                                horizontalArrangement = Arrangement.SpaceBetween,
+                                                verticalAlignment = Alignment.Top,
+                                            ) {
+                                                Text(
+                                                    text = "Commander ${index + 1}",
+                                                    style = MaterialTheme.typography.labelMedium,
+                                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                                    modifier = Modifier.padding(bottom = 6.dp)
+                                                )
+
+                                                if (suggestionsObj?.isLoading == true) {
+                                                    Box (
+                                                        modifier = Modifier.size(15.dp)
+                                                    ) {
+                                                        CircularProgressIndicator(
+                                                            strokeWidth = 2.5.dp
+                                                        )
+                                                    }
+                                                }
+                                            }
+
                                             ExposedDropdownMenuBox(
                                                 expanded = expanded,
                                                 onExpandedChange = { expanded = it }
@@ -263,7 +282,6 @@ fun SetupScreen(
                                                             it
                                                         )
                                                     },
-                                                    label = { Text("Commander") },
                                                     singleLine = true,
                                                     modifier = Modifier
                                                         .fillMaxWidth()
