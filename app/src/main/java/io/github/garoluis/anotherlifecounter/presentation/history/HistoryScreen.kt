@@ -235,30 +235,28 @@ private fun GameHistoryItem(
                     )
                 }
 
-                val damageEntries = player.commanderDamage.filter { it.value != 0 }
-                if (damageEntries.isNotEmpty()) {
-                    Spacer(modifier = Modifier.height(2.dp))
-                    damageEntries.forEach { (opponentId, damage) ->
-                        val opponentName = players.firstOrNull { it.id == opponentId }?.name ?: "???"
-                        val opponentIndex = players.indexOfFirst { it.id == opponentId }
-                        val opponentAccent = playerAccents.getOrElse(opponentIndex) { Player2Accent }
-                        Row(
-                            modifier = Modifier.padding(start = 8.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(
-                                text = "vs $opponentName",
-                                style = MaterialTheme.typography.bodySmall,
-                                color = opponentAccent
-                            )
-                            Spacer(modifier = Modifier.width(6.dp))
-                            Text(
-                                text = "$damage",
-                                style = MaterialTheme.typography.bodySmall,
-                                fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        }
+                val opponents = players.filter { it.id != player.id }
+
+                Spacer(modifier = Modifier.height(2.dp))
+                opponents.forEach {
+                    val opponentIndex = it.id
+                    val opponentAccent = playerAccents.getOrElse(opponentIndex) { Player2Accent }
+                    Row(
+                        modifier = Modifier.padding(start = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "- ${it.name}:",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = opponentAccent
+                        )
+                        Spacer(modifier = Modifier.width(6.dp))
+                        Text(
+                            text = "${player.commanderDamage[it.id] ?: 0}",
+                            style = MaterialTheme.typography.bodySmall,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
                     }
                 }
 
