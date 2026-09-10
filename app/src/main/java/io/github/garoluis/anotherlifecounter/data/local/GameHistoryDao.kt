@@ -21,4 +21,10 @@ interface GameHistoryDao {
 
     @Query("DELETE FROM game_history WHERE id IN (:ids)")
     suspend fun deleteGames(ids: List<Long>)
+
+    @Query("SELECT * FROM game_history ORDER BY timestamp DESC")
+    suspend fun getAllGamesList(): List<GameHistoryEntity>
+
+    @Insert
+    suspend fun insertGames(entities: List<GameHistoryEntity>)
 }

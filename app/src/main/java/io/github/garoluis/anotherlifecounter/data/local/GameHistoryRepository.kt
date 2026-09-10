@@ -29,4 +29,8 @@ class GameHistoryRepository(private val dao: GameHistoryDao) {
             Json.decodeFromString<List<Player>>(json)
         }
     }
+
+    suspend fun exportAllGames(): List<GameHistoryEntity> = dao.getAllGamesList()
+
+    suspend fun importGames(history: List<GameHistoryEntity>) = dao.insertGames(history)
 }

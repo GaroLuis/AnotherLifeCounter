@@ -14,6 +14,7 @@ import io.github.garoluis.anotherlifecounter.presentation.game.GameViewModel
 import io.github.garoluis.anotherlifecounter.presentation.history.HistoryScreen
 import io.github.garoluis.anotherlifecounter.presentation.history.HistoryViewModel
 import io.github.garoluis.anotherlifecounter.presentation.setup.SetupScreen
+import io.github.garoluis.anotherlifecounter.presentation.setup.SetupViewModel
 import kotlinx.serialization.json.Json
 
 object Routes {
@@ -33,6 +34,10 @@ fun AppNavGraph(navController: NavHostController) {
         startDestination = Routes.SETUP
     ) {
         composable(Routes.SETUP) {
+            val setupViewModel: SetupViewModel = viewModel(
+                factory = SetupViewModelFactory(repository)
+            )
+
             SetupScreen(
                 onStartGame = { players ->
                     val playersJson = Json.encodeToString(players)
@@ -40,7 +45,8 @@ fun AppNavGraph(navController: NavHostController) {
                 },
                 onShowHistory = {
                     navController.navigate(Routes.HISTORY)
-                }
+                },
+                viewModel = setupViewModel
             )
         }
 

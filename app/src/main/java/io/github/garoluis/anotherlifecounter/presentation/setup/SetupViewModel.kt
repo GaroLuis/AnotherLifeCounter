@@ -1,8 +1,13 @@
 package io.github.garoluis.anotherlifecounter.presentation.setup
 
+import android.content.Context
+import android.net.Uri
+import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.github.garoluis.anotherlifecounter.data.ScryfallApi
+import io.github.garoluis.anotherlifecounter.data.local.GameHistoryEntity
+import io.github.garoluis.anotherlifecounter.data.local.GameHistoryRepository
 import io.github.garoluis.anotherlifecounter.domain.model.Player
 import io.github.garoluis.anotherlifecounter.domain.usecase.GameUseCases
 import kotlinx.coroutines.Job
@@ -11,6 +16,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.serialization.json.Json
 import kotlin.time.Duration.Companion.milliseconds
 
 data class Suggestions(
@@ -26,6 +32,7 @@ data class SetupUiState(
 )
 
 class SetupViewModel(
+    private val repository: GameHistoryRepository,
     private val gameUseCases: GameUseCases = GameUseCases()
 ) : ViewModel() {
 
@@ -94,5 +101,36 @@ class SetupViewModel(
         val players = gameUseCases.createPlayers(state.playerCount, names)
         _uiState.value = state.copy(players = players)
         return players
+    }
+
+    fun exportGames(context: Context, uri: Uri) {
+        viewModelScope.launch {
+            try {
+                val games = repository.exportAllGames()
+                val json = Json.encodeToString(games)
+                context.contentResolver.openOutputStream(uri)?.use { stream ->
+                    stream.write(json.toByteArray())
+                }
+                Toast.makeText(context, "Export complete", Toast.LENGTH_SHORT).show()
+            } catch (e: Exception) {
+                Toast.makeText(context, "Export failed: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    fun importGames(context: Context, uri: Uri) {
+        viewModelScope.launch {
+            try {
+                val json = context.contentResolver.openInputStream(uri)?.use { stream ->
+                    stream.bufferedReader().readText()
+                } ?: throw Exception("Could not read file")
+                val games = Json.decodeFromString<List<GameHistoryEntity>>(json)
+                val gamesWithResetIds = games.map { it.copy(id = 0) }
+                repository.importGames(gamesWithResetIds)
+                Toast.makeText(context, "Import complete", Toast.LENGTH_SHORT).show()
+            } catch (e: Exception) {
+                Toast.makeText(context, "Import failed: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 }

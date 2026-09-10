@@ -2,6 +2,8 @@ package io.github.garoluis.anotherlifecounter.presentation.setup
 
 import android.content.pm.ActivityInfo
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -19,8 +21,10 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Upload
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -76,6 +80,18 @@ fun SetupScreen(
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
 
+    val exportLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.CreateDocument("application/json")
+    ) { uri ->
+        uri?.let { viewModel.exportGames(context, it) }
+    }
+
+    val importLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.OpenDocument()
+    ) { uri ->
+        uri?.let { viewModel.importGames(context, it) }
+    }
+
     DisposableEffect(Unit) {
         onDispose {
             activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
@@ -107,6 +123,42 @@ fun SetupScreen(
                             }
 
                             onShowHistory()
+                        }
+                    )
+
+                    NavigationDrawerItem(
+                        label = { Text("Export data") },
+                        selected = false,
+                        icon = {
+                            Icon(
+                                imageVector = Icons.Default.Download,
+                                contentDescription = null
+                            )
+                        },
+                        onClick = {
+                            scope.launch {
+                                drawerState.close()
+                            }
+
+                            exportLauncher.launch("game_history_backup.json")
+                        }
+                    )
+
+                    NavigationDrawerItem(
+                        label = { Text("Import data") },
+                        selected = false,
+                        icon = {
+                            Icon(
+                                imageVector = Icons.Default.Upload,
+                                contentDescription = null
+                            )
+                        },
+                        onClick = {
+                            scope.launch {
+                                drawerState.close()
+                            }
+
+                            importLauncher.launch(arrayOf("application/json"))
                         }
                     )
                 }
