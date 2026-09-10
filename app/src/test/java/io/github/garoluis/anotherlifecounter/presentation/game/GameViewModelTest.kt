@@ -54,6 +54,18 @@ class GameViewModelTest {
     }
 
     @Test
+    fun `initializePlayers does not reinitialize if already initialized`() = runTest {
+        viewModel.initializePlayers(createPlayers(2))
+        viewModel.updateLife(playerId = 0, delta = -10)
+        advanceUntilIdle()
+
+        viewModel.initializePlayers(createPlayers(2))
+        advanceUntilIdle()
+
+        assertEquals(30, viewModel.uiState.value.players[0].life)
+    }
+
+    @Test
     fun `initializePlayers with empty list sets empty state`() = runTest {
         viewModel.initializePlayers(emptyList())
         advanceUntilIdle()

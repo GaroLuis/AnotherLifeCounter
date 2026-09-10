@@ -124,7 +124,7 @@ fun GameScreen(
     players: List<Player>,
     viewModel: GameViewModel = viewModel()
 ) {
-    LaunchedEffect(players) {
+    LaunchedEffect(Unit) {
         viewModel.initializePlayers(players)
     }
 
