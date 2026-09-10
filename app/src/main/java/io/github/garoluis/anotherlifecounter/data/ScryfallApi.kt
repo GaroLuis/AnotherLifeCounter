@@ -10,8 +10,20 @@ import okhttp3.Request
 import java.util.concurrent.TimeUnit
 
 @Serializable
+data class ImageUris(
+    val small: String? = null,
+)
+
+@Serializable
+data class Card(
+    val name: String = "",
+    val flavor_name: String? = null,
+    val image_uris: ImageUris? = null
+)
+
+@Serializable
 data class AutocompleteResponse(
-    val data: List<String> = emptyList()
+    val data: List<Card> = emptyList()
 )
 
 object ScryfallApi {
@@ -25,7 +37,7 @@ object ScryfallApi {
     suspend fun searchCommanders(query: String): List<String> = withContext(Dispatchers.IO) {
         if (query.isBlank()) return@withContext emptyList()
 
-        val url = "https://api.scryfall.com/cards/autocomplete?q=${query.trim()}"
+        val url = "https://api.scryfall.com/cards/search?q=name:${query.trim()}+t:legendary+(t:creature+or+t:vehicle)"
         val request = Request.Builder()
             .url(url)
             .header("User-Agent", "AnotherLifeCounter/1.0")
@@ -37,7 +49,7 @@ object ScryfallApi {
             val body = response.body?.string() ?: ""
             Log.d("ScryfallApi", "Query: $query, Status: ${response.code}, Body: $body")
             if (response.isSuccessful) {
-                val result = json.decodeFromString<AutocompleteResponse>(body).data
+                val result = json.decodeFromString<AutocompleteResponse>(body).data.map{it.flavor_name ?: it.name}
                 Log.d("ScryfallApi", "Results: $result")
                 result
             } else {

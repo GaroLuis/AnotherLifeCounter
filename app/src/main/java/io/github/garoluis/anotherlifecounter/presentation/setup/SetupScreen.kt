@@ -285,7 +285,7 @@ fun SetupScreen(
                                                     singleLine = true,
                                                     modifier = Modifier
                                                         .fillMaxWidth()
-                                                        .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable),
+                                                        .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryEditable),
                                                     colors = OutlinedTextFieldDefaults.colors(
                                                         focusedBorderColor = MaterialTheme.colorScheme.primary,
                                                         unfocusedBorderColor = MaterialTheme.colorScheme.outline,
@@ -311,14 +311,11 @@ fun SetupScreen(
                                                                     tint = MaterialTheme.colorScheme.onSurfaceVariant
                                                                 )
                                                             }
-                                                            ExposedDropdownMenuDefaults.TrailingIcon(
-                                                                expanded = expanded
-                                                            )
                                                         }
                                                     }
                                                 )
-                                                ExposedDropdownMenu(
-                                                    expanded = expanded,
+                                                    ExposedDropdownMenu(
+                                                    expanded = expanded && suggestions.isNotEmpty(),
                                                     onDismissRequest = {
                                                         expanded = false
                                                         viewModel.dismissSuggestions(index)
