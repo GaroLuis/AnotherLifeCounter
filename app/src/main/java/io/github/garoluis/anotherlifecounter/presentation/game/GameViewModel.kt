@@ -28,7 +28,14 @@ class GameViewModel(
 
     fun initializePlayers(players: List<Player>) {
         if (_uiState.value.players.isNotEmpty()) return
-        val startingId = if (players.isNotEmpty()) players.random().id else null
+
+        var startingId: Int? = null
+
+        if (players.isNotEmpty()) {
+            val startedPlayer = players.find{it.isStartingPlayer}
+            startingId = startedPlayer?.id ?: players.random().id
+        }
+
         val updatedPlayers = players.map { it.copy(isStartingPlayer = it.id == startingId) }
         _uiState.value = GameUiState(players = updatedPlayers)
     }
