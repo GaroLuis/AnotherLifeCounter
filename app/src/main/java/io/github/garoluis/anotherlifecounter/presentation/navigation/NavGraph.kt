@@ -70,9 +70,7 @@ fun AppNavGraph(navController: NavHostController) {
                 onBack = { navController.popBackStack() },
                 onRestoreGame = { players ->
                     val playersJson = Json.encodeToString(players)
-                    navController.navigate("game/$playersJson") {
-                        popUpTo(Routes.SETUP)
-                    }
+                    navController.navigate("game/$playersJson")
                 },
                 viewModel = historyViewModel
             )
