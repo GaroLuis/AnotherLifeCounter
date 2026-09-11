@@ -49,7 +49,7 @@ object ScryfallApi {
             val body = response.body?.string() ?: ""
             Log.d("ScryfallApi", "Query: $query, Status: ${response.code}, Body: $body")
             if (response.isSuccessful) {
-                val result = json.decodeFromString<AutocompleteResponse>(body).data.map{it.flavor_name ?: it.name}
+                val result = json.decodeFromString<AutocompleteResponse>(body).data.map{(it.flavor_name ?: it.name).split("//")[0]}
                 Log.d("ScryfallApi", "Results: $result")
                 result
             } else {
