@@ -35,7 +35,6 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuAnchorType
 import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -59,10 +58,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import io.github.garoluis.anotherlifecounter.R
 import io.github.garoluis.anotherlifecounter.domain.model.Player
 import kotlinx.coroutines.launch
 
@@ -109,12 +110,12 @@ fun SetupScreen(
                         .verticalScroll(rememberScrollState())
                 ) {
                     NavigationDrawerItem(
-                        label = { Text("Game history") },
+                        label = { Text(stringResource(R.string.option_game_history)) },
                         selected = false,
                         icon = {
                             Icon(
                                 imageVector = Icons.Default.History,
-                                contentDescription = null
+                                contentDescription = stringResource(R.string.content_description_navigation_history)
                             )
                         },
                         onClick = {
@@ -127,12 +128,12 @@ fun SetupScreen(
                     )
 
                     NavigationDrawerItem(
-                        label = { Text("Export data") },
+                        label = { Text(stringResource(R.string.option_export_data)) },
                         selected = false,
                         icon = {
                             Icon(
                                 imageVector = Icons.Default.Download,
-                                contentDescription = null
+                                contentDescription = stringResource(R.string.content_description_navigation_export_data)
                             )
                         },
                         onClick = {
@@ -145,12 +146,12 @@ fun SetupScreen(
                     )
 
                     NavigationDrawerItem(
-                        label = { Text("Import data") },
+                        label = { Text(stringResource(R.string.option_import_data)) },
                         selected = false,
                         icon = {
                             Icon(
                                 imageVector = Icons.Default.Upload,
-                                contentDescription = null
+                                contentDescription = stringResource(R.string.content_description_navigation_import_data)
                             )
                         },
                         onClick = {
@@ -183,7 +184,7 @@ fun SetupScreen(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
-                            text = "Life Counter",
+                            text = stringResource(R.string.head_line),
                             style = MaterialTheme.typography.headlineLarge,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onBackground,
@@ -191,13 +192,12 @@ fun SetupScreen(
                         )
 
                         Text(
-                            text = "Set up your Commander game",
+                            text = stringResource(R.string.subhead_line),
                             style = MaterialTheme.typography.bodyLarge,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.padding(bottom = 32.dp)
                         )
                     }
-
 
                     Box(
                         modifier = Modifier.fillMaxWidth(),
@@ -215,7 +215,7 @@ fun SetupScreen(
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Menu,
-                                contentDescription = "Menu",
+                                contentDescription = stringResource(R.string.content_description_menu),
                                 modifier = Modifier.height(22.dp),
                                 tint = MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -224,7 +224,7 @@ fun SetupScreen(
                 }
 
                 Text(
-                    text = "Number of Players",
+                    text = stringResource(R.string.label_number_of_players),
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onBackground,
                     modifier = Modifier.padding(bottom = 12.dp)
@@ -258,7 +258,7 @@ fun SetupScreen(
                 }
 
                 Text(
-                    text = "Commander Names",
+                    text = stringResource(R.string.label_commander_names),
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onBackground,
                     modifier = Modifier.padding(bottom = 12.dp)
@@ -305,14 +305,17 @@ fun SetupScreen(
                                                 verticalAlignment = Alignment.Top,
                                             ) {
                                                 Text(
-                                                    text = "Commander ${index + 1}",
+                                                    text = stringResource(
+                                                        R.string.default_commander_name,
+                                                        index + 1
+                                                    ),
                                                     style = MaterialTheme.typography.labelMedium,
                                                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                                                     modifier = Modifier.padding(bottom = 6.dp)
                                                 )
 
                                                 if (suggestionsObj?.isLoading == true) {
-                                                    Box (
+                                                    Box(
                                                         modifier = Modifier.size(15.dp)
                                                     ) {
                                                         CircularProgressIndicator(
@@ -348,7 +351,9 @@ fun SetupScreen(
                                                             if (name.isNotEmpty()) {
                                                                 Icon(
                                                                     imageVector = Icons.Default.Close,
-                                                                    contentDescription = "Clear",
+                                                                    contentDescription = stringResource(
+                                                                        R.string.content_description_clear_select
+                                                                    ),
                                                                     modifier = Modifier
                                                                         .size(20.dp)
                                                                         .clickable {
@@ -366,7 +371,7 @@ fun SetupScreen(
                                                         }
                                                     }
                                                 )
-                                                    ExposedDropdownMenu(
+                                                ExposedDropdownMenu(
                                                     expanded = expanded && suggestions.isNotEmpty(),
                                                     onDismissRequest = {
                                                         expanded = false
@@ -412,7 +417,7 @@ fun SetupScreen(
                 shape = MaterialTheme.shapes.medium
             ) {
                 Text(
-                    text = "Start Game",
+                    text = stringResource(R.string.button_start),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center

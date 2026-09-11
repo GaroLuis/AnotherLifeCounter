@@ -1,3 +1,28 @@
 <resources>
     <string name="app_name">Another Life Counter</string>
+    <string name="head_line">Life Counter</string>
+    <string name="subhead_line">Set up your Commander game</string>
+    <string name="option_game_history">Game history</string>
+    <string name="option_import_data">Import data</string>
+    <string name="label_number_of_players">Number of Players</string>
+    <string name="label_commander_names">Commander Names</string>
+    <string name="button_start">Start Game</string>
+    <string name="default_commander_name">Commander %1$d</string>
+    <string name="title_game_history">Game History</string>
+    <string name="history_no_content">No saved games yet</string>
+    <string name="delete_warning_title">Delete Game</string>
+    <string name="delete_warning_text">Are you sure you want to delete this saved game?</string>
+    <string name="delete_warning_submit">Delete</string>
+    <string name="delete_warning_cancel">Cancel</string>
+    <string name="content_description_saved">Saved</string>
+    <string name="content_description_save_game">Save Game</string>
+    <string name="content_description_starting_player">Starting player</string>
+    <string name="content_description_delete_game">Delete game</string>
+    <string name="content_description_navigation_back">Back</string>
+    <string name="content_description_navigation_history">Go to history</string>
+    <string name="content_description_navigation_export_data">Export games</string>
+    <string name="option_export_data">Export data</string>
+    <string name="content_description_navigation_import_data">Import data</string>
+    <string name="content_description_menu">Menu</string>
+    <string name="content_description_clear_select">Clear select</string>
 </resources>

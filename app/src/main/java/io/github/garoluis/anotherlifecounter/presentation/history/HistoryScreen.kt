@@ -39,8 +39,10 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import io.github.garoluis.anotherlifecounter.R
 import io.github.garoluis.anotherlifecounter.data.local.GameHistoryEntity
 import io.github.garoluis.anotherlifecounter.domain.model.Player
 import io.github.garoluis.anotherlifecounter.ui.theme.Player1Accent
@@ -69,19 +71,19 @@ fun HistoryScreen(
     gameToDelete?.let { game ->
         AlertDialog(
             onDismissRequest = { gameToDelete = null },
-            title = { Text("Delete Game") },
-            text = { Text("Are you sure you want to delete this saved game?") },
+            title = { Text(stringResource(R.string.delete_warning_title)) },
+            text = { Text(stringResource(R.string.delete_warning_text)) },
             confirmButton = {
                 TextButton(onClick = {
                     viewModel.deleteGame(game.id)
                     gameToDelete = null
                 }) {
-                    Text("Delete")
+                    Text(stringResource(R.string.delete_warning_submit))
                 }
             },
             dismissButton = {
                 TextButton(onClick = { gameToDelete = null }) {
-                    Text("Cancel")
+                    Text(stringResource(R.string.delete_warning_cancel))
                 }
             }
         )
@@ -92,7 +94,7 @@ fun HistoryScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = "Game History",
+                        text = stringResource(R.string.title_game_history),
                         fontWeight = FontWeight.Bold
                     )
                 },
@@ -100,7 +102,7 @@ fun HistoryScreen(
                     IconButton(onClick = onBack) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back"
+                            contentDescription = stringResource(R.string.content_description_navigation_back)
                         )
                     }
                 },
@@ -121,7 +123,7 @@ fun HistoryScreen(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = "No saved games yet",
+                    text = stringResource(R.string.history_no_content),
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -195,7 +197,7 @@ private fun GameHistoryItem(
                 IconButton(onClick = onDelete) {
                     Icon(
                         imageVector = Icons.Default.Delete,
-                        contentDescription = "Delete game",
+                        contentDescription = stringResource(R.string.content_description_delete_game),
                         tint = MaterialTheme.colorScheme.error
                     )
                 }
@@ -221,7 +223,7 @@ private fun GameHistoryItem(
                     if (player.isStartingPlayer) {
                         Icon(
                             imageVector = Icons.Default.Star,
-                            contentDescription = null,
+                            contentDescription = stringResource(R.string.content_description_starting_player),
                             tint = accent,
                             modifier = Modifier.height(15.dp)
                         )

@@ -33,7 +33,9 @@ import androidx.compose.ui.layout.layout
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
+import io.github.garoluis.anotherlifecounter.R
 import io.github.garoluis.anotherlifecounter.domain.model.Player
 
 fun getPlayerRotation(playerIndex: Int, totalPlayers: Int): Float {
@@ -142,7 +144,9 @@ fun GameScreen(
     val isLandscape = configuration.screenWidthDp > configuration.screenHeightDp
 
     Box(modifier = Modifier.fillMaxSize()) {
-        Box(modifier = Modifier.fillMaxSize().landscapeRotation(isLandscape)) {
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .landscapeRotation(isLandscape)) {
             when (playerCount) {
                 2 -> TwoPlayerLayout(uiState.players, viewModel)
                 3 -> ThreePlayerLayout(uiState.players, viewModel)
@@ -165,11 +169,12 @@ fun GameScreen(
             AnimatedContent(
                 targetState = uiState.isSaved,
                 transitionSpec = { fadeIn(tween(100)) togetherWith fadeOut(tween(100)) },
-                label = "saveIcon"
             ) { saved ->
                 Icon(
                     imageVector = if (saved) Icons.Default.Check else Icons.Default.Save,
-                    contentDescription = if (saved) "Saved" else "Save Game",
+                    contentDescription = if (saved) stringResource(R.string.content_description_saved) else stringResource(
+                        R.string.content_description_save_game
+                    ),
                     modifier = Modifier.height(if (saved) 22.dp.scaled(screenScale) else 18.dp.scaled(screenScale))
                 )
             }
