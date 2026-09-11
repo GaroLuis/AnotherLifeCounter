@@ -124,10 +124,9 @@ fun SetupScreen(
                         },
                         onClick = {
                             scope.launch {
-                                drawerState.close()
+                                drawerState.snapTo(DrawerValue.Closed)
+                                onShowHistory()
                             }
-
-                            onShowHistory()
                         }
                     )
 
@@ -142,10 +141,9 @@ fun SetupScreen(
                         },
                         onClick = {
                             scope.launch {
-                                drawerState.close()
+                                drawerState.snapTo(DrawerValue.Closed)
+                                exportLauncher.launch("game_history_backup.json")
                             }
-
-                            exportLauncher.launch("game_history_backup.json")
                         }
                     )
 
@@ -160,10 +158,9 @@ fun SetupScreen(
                         },
                         onClick = {
                             scope.launch {
-                                drawerState.close()
+                                drawerState.snapTo(DrawerValue.Closed)
+                                importLauncher.launch(arrayOf("application/json"))
                             }
-
-                            importLauncher.launch(arrayOf("application/json"))
                         }
                     )
                 }
@@ -211,9 +208,9 @@ fun SetupScreen(
                             onClick = {
                                 scope.launch {
                                     if (drawerState.isClosed) {
-                                        drawerState.open()
+                                        drawerState.snapTo(DrawerValue.Open)
                                     } else {
-                                        drawerState.close()
+                                        drawerState.snapTo(DrawerValue.Closed)
                                     }
                                 }
                             },

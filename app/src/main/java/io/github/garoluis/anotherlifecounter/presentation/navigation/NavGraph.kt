@@ -67,7 +67,6 @@ fun AppNavGraph(navController: NavHostController) {
                 factory = HistoryViewModelFactory(repository)
             )
             HistoryScreen(
-                onBack = { navController.popBackStack() },
                 onRestoreGame = { players ->
                     val playersJson = Json.encodeToString(players)
                     navController.navigate("game/$playersJson")
