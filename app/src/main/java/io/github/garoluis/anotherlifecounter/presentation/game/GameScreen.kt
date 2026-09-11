@@ -174,7 +174,6 @@ fun GameScreen(
         animationSpec = tween(durationMillis = 200),
         label = "saveScale"
     )
-    val screenScale = rememberScreenScale()
 
     val configuration = LocalConfiguration.current
     val isLandscape = configuration.screenWidthDp > configuration.screenHeightDp
@@ -245,11 +244,7 @@ fun GameScreen(
                     contentDescription = if (saved) stringResource(R.string.content_description_saved) else stringResource(
                         R.string.content_description_save_game
                     ),
-                    modifier = Modifier.height(
-                        if (saved) 22.dp.scaled(screenScale) else 18.dp.scaled(
-                            screenScale
-                        )
-                    )
+                    modifier = Modifier.height(if (saved) 22.dp else 18.dp)
                 )
             }
         }

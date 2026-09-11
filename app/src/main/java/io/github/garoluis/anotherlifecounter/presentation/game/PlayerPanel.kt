@@ -76,7 +76,7 @@ fun PlayerPanel(
                 color = accentColor,
                 textAlign = TextAlign.Center,
                 maxLines = 1,
-                modifier = Modifier.padding(top = 18.dp.scaled(scale), bottom = 2.dp.scaled(scale))
+                modifier = Modifier.padding(top = 22.dp.scaled(scale), bottom = 2.dp.scaled(scale))
             )
         }
 
