@@ -56,6 +56,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
@@ -106,8 +107,11 @@ fun SetupScreen(
             ) {
                 Column(
                     modifier = Modifier
+                        .fillMaxSize()
                         .padding(horizontal = 16.dp)
-                        .verticalScroll(rememberScrollState())
+                        .verticalScroll(rememberScrollState()),
+                    verticalArrangement = Arrangement.Bottom
+
                 ) {
                     NavigationDrawerItem(
                         label = { Text(stringResource(R.string.option_game_history)) },
@@ -165,7 +169,8 @@ fun SetupScreen(
                 }
             }
         },
-        drawerState = drawerState
+        drawerState = drawerState,
+        scrimColor = Color.Black.copy(alpha = 0.75f)
     ) {
         Column(
             modifier = Modifier
