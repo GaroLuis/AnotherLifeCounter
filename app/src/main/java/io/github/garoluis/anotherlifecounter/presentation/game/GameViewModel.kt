@@ -68,4 +68,13 @@ class GameViewModel(
             _uiState.update { it.copy(isSaved = false) }
         }
     }
+
+    fun updateStartingPlayer(playerId: Int) {
+        _uiState.update { state ->
+            val updatedPlayers = state.players.map { player ->
+                player.copy(isStartingPlayer = player.id == playerId)
+            }
+            state.copy(players = updatedPlayers)
+        }
+    }
 }

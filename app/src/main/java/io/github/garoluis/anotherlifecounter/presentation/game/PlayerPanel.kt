@@ -1,6 +1,7 @@
 package io.github.garoluis.anotherlifecounter.presentation.game
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -36,7 +38,8 @@ fun PlayerPanel(
     onLifeChange: (Int) -> Unit,
     onDamageChange: (Int, Int) -> Unit,
     modifier: Modifier = Modifier,
-    damageWeight: Float = 0.6f
+    damageWeight: Float = 0.6f,
+    onDoubleTap: (Int) -> Unit,
 ) {
     val playerIndex = players.indexOfFirst { it.id == player.id }
     val accentColor = playerAccents.getOrElse(playerIndex) { Player1Accent }
@@ -51,7 +54,10 @@ fun PlayerPanel(
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
+            horizontalArrangement = Arrangement.Center,
+            modifier = Modifier.pointerInput(Unit) {
+                detectTapGestures(onDoubleTap = { onDoubleTap(player.id) })
+            },
         ) {
             if (player.isStartingPlayer) {
                 Icon(

@@ -263,7 +263,7 @@ fun GameScreen(
                 Text(
                     text = "$diceNumber",
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    fontSize = (if (isLandscape) 250.sp else 400.sp).scaled(scale),
+                    fontSize = (if (isLandscape) 250.sp else 250.sp).scaled(scale),
                 )
             }
         }
@@ -279,7 +279,7 @@ fun GameScreen(
                 Text(
                     text = "$randomNumber/$diceNumber",
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    fontSize = (if (isLandscape) 250.sp else 300.sp).scaled(scale),
+                    fontSize = (if (isLandscape) 250.sp else 125.sp).scaled(scale),
                 )
             }
         }
@@ -297,6 +297,7 @@ private fun TwoPlayerLayout(
             players = players,
             rotationZ = getPlayerRotation(0, 2),
             onLifeChange = { delta -> viewModel.updateLife(players[0].id, delta) },
+            onDoubleTap = {id -> viewModel.updateStartingPlayer(id)},
             onDamageChange = { opponentId, delta ->
                 viewModel.updateCommanderDamage(players[0].id, opponentId, delta)
             },
@@ -311,6 +312,7 @@ private fun TwoPlayerLayout(
             players = players,
             rotationZ = getPlayerRotation(1, 2),
             onLifeChange = { delta -> viewModel.updateLife(players[1].id, delta) },
+            onDoubleTap = {id -> viewModel.updateStartingPlayer(id)},
             onDamageChange = { opponentId, delta ->
                 viewModel.updateCommanderDamage(players[1].id, opponentId, delta)
             },
@@ -338,6 +340,7 @@ private fun ThreePlayerLayout(
                 players = players,
                 rotationZ = getPlayerRotation(2, 3),
                 onLifeChange = { delta -> viewModel.updateLife(players[2].id, delta) },
+                onDoubleTap = {id -> viewModel.updateStartingPlayer(id)},
                 onDamageChange = { opponentId, delta ->
                     viewModel.updateCommanderDamage(players[2].id, opponentId, delta)
                 },
@@ -352,6 +355,7 @@ private fun ThreePlayerLayout(
                 players = players,
                 rotationZ = getPlayerRotation(0, 3),
                 onLifeChange = { delta -> viewModel.updateLife(players[0].id, delta) },
+                onDoubleTap = {id -> viewModel.updateStartingPlayer(id)},
                 onDamageChange = { opponentId, delta ->
                     viewModel.updateCommanderDamage(players[0].id, opponentId, delta)
                 },
@@ -367,6 +371,7 @@ private fun ThreePlayerLayout(
             players = players,
             rotationZ = getPlayerRotation(1, 3),
             onLifeChange = { delta -> viewModel.updateLife(players[1].id, delta) },
+            onDoubleTap = {id -> viewModel.updateStartingPlayer(id)},
             onDamageChange = { opponentId, delta ->
                 viewModel.updateCommanderDamage(players[1].id, opponentId, delta)
             },
@@ -394,6 +399,7 @@ private fun FourPlayerLayout(
                 players = players,
                 rotationZ = getPlayerRotation(2, 4),
                 onLifeChange = { delta -> viewModel.updateLife(players[2].id, delta) },
+                onDoubleTap = {id -> viewModel.updateStartingPlayer(id)},
                 onDamageChange = { opponentId, delta ->
                     viewModel.updateCommanderDamage(players[2].id, opponentId, delta)
                 },
@@ -408,6 +414,7 @@ private fun FourPlayerLayout(
                 players = players,
                 rotationZ = getPlayerRotation(0, 4),
                 onLifeChange = { delta -> viewModel.updateLife(players[0].id, delta) },
+                onDoubleTap = {id -> viewModel.updateStartingPlayer(id)},
                 onDamageChange = { opponentId, delta ->
                     viewModel.updateCommanderDamage(players[0].id, opponentId, delta)
                 },
@@ -428,6 +435,7 @@ private fun FourPlayerLayout(
                 players = players,
                 rotationZ = getPlayerRotation(3, 4),
                 onLifeChange = { delta -> viewModel.updateLife(players[3].id, delta) },
+                onDoubleTap = {id -> viewModel.updateStartingPlayer(id)},
                 onDamageChange = { opponentId, delta ->
                     viewModel.updateCommanderDamage(players[3].id, opponentId, delta)
                 },
@@ -442,6 +450,7 @@ private fun FourPlayerLayout(
                 players = players,
                 rotationZ = getPlayerRotation(1, 4),
                 onLifeChange = { delta -> viewModel.updateLife(players[1].id, delta) },
+                onDoubleTap = {id -> viewModel.updateStartingPlayer(id)},
                 onDamageChange = { opponentId, delta ->
                     viewModel.updateCommanderDamage(players[1].id, opponentId, delta)
                 },
