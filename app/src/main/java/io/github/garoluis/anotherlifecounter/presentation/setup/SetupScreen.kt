@@ -142,7 +142,8 @@ fun SetupScreen(
                         onClick = {
                             scope.launch {
                                 drawerState.snapTo(DrawerValue.Closed)
-                                exportLauncher.launch("game_history_backup.json")
+                                val dateTime = java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm"))
+                                exportLauncher.launch("game_history_backup_$dateTime.json")
                             }
                         }
                     )
