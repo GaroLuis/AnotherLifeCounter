@@ -32,5 +32,9 @@ class GameHistoryRepository(private val dao: GameHistoryDao) {
 
     suspend fun exportAllGames(): List<GameHistoryEntity> = dao.getAllGamesList()
 
-    suspend fun importGames(history: List<GameHistoryEntity>) = dao.insertGames(history)
+    suspend fun importGames(history: List<GameHistoryEntity>) {
+        val existingTimestamps = dao.getAllTimestamps().toSet()
+        val newGames = history.filter { it.timestamp !in existingTimestamps }
+        dao.insertGames(newGames)
+    }
 }

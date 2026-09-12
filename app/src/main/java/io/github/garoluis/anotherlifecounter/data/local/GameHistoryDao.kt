@@ -27,4 +27,7 @@ interface GameHistoryDao {
 
     @Insert
     suspend fun insertGames(entities: List<GameHistoryEntity>)
+
+    @Query("SELECT timestamp FROM game_history")
+    suspend fun getAllTimestamps(): List<Long>
 }
