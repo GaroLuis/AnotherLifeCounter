@@ -5,6 +5,7 @@ import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -44,6 +45,8 @@ fun PlayerPanel(
     val playerIndex = players.indexOfFirst { it.id == player.id }
     val accentColor = playerAccents.getOrElse(playerIndex) { Player1Accent }
     val scale = rememberScreenScale()
+    //is a player that takes half the screen not a quarter
+    val isHalf = players.size ==2 || (players.size == 3 && player.id == 1)
 
     Column(
         modifier = modifier
@@ -76,7 +79,11 @@ fun PlayerPanel(
                 color = accentColor,
                 textAlign = TextAlign.Center,
                 maxLines = 1,
-                modifier = Modifier.padding(top = 22.dp.scaled(scale), bottom = 2.dp.scaled(scale))
+                modifier = if (isHalf) {
+                    Modifier.padding(top = 22.dp)
+                } else {
+                    Modifier.padding(top = 22.dp.scaled(scale), bottom = 2.dp.scaled(scale))
+                }
             )
         }
 
