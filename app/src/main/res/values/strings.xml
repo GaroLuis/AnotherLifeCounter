@@ -25,4 +25,18 @@
     <string name="content_description_navigation_import_data">Import data</string>
     <string name="content_description_menu">Menu</string>
     <string name="content_description_clear_select">Clear select</string>
+    <string name="option_stats">Statistics</string>
+    <string name="content_description_navigation_stats">Go to statistics</string>
+    <string name="title_statistics">Statistics</string>
+    <string name="winrate_no_data">No game data available</string>
+    <string name="winrate_overall">Win rates</string>
+    <string name="winrate_head_to_head">Matchups</string>
+    <string name="winrate_select_player_a">Commander A</string>
+    <string name="winrate_select_player_b">Commander B</string>
+    <string name="winrate_wins">Wins</string>
+    <string name="winrate_losses">Losses</string>
+    <string name="winrate_games_played">Games: %1$d</string>
+    <string name="winrate_format">%.0f%%</string>
+    <string name="winrate_no_head_to_head">Select two commanders to compare</string>
+    <string name="winrate_vs">%1$s vs %2$s</string>
 </resources>

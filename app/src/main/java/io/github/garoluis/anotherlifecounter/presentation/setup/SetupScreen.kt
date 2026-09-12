@@ -25,6 +25,7 @@ import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Upload
+import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -35,6 +36,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuAnchorType
 import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -73,6 +75,7 @@ import kotlinx.coroutines.launch
 fun SetupScreen(
     onStartGame: (List<Player>) -> Unit,
     onShowHistory: () -> Unit = {},
+    onShowStats: () -> Unit = {},
     viewModel: SetupViewModel = viewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -113,6 +116,23 @@ fun SetupScreen(
                     verticalArrangement = Arrangement.Bottom
 
                 ) {
+                    NavigationDrawerItem(
+                        label = { Text(stringResource(R.string.option_stats)) },
+                        selected = false,
+                        icon = {
+                            Icon(
+                                imageVector = Icons.Default.BarChart,
+                                contentDescription = stringResource(R.string.content_description_navigation_stats)
+                            )
+                        },
+                        onClick = {
+                            scope.launch {
+                                drawerState.snapTo(DrawerValue.Closed)
+                                onShowStats()
+                            }
+                        }
+                    )
+
                     NavigationDrawerItem(
                         label = { Text(stringResource(R.string.option_game_history)) },
                         selected = false,
@@ -381,7 +401,16 @@ fun SetupScreen(
                                                         viewModel.dismissSuggestions(index)
                                                     }
                                                 ) {
-                                                    suggestions.forEach { suggestion ->
+
+                                                    suggestions.forEachIndexed { suggestionIndex, suggestion ->
+                                                        if (suggestionIndex > 0) {
+                                                            HorizontalDivider(
+                                                                modifier = Modifier.padding(horizontal = 5.dp),
+                                                                thickness = 0.5.dp,
+                                                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.15f)
+                                                            )
+                                                        }
+
                                                         DropdownMenuItem(
                                                             text = { Text(suggestion) },
                                                             onClick = {
