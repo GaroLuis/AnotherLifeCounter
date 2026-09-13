@@ -186,7 +186,8 @@ private fun OverallWinrateChart(
                 ) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
                             text = winrate.name,
@@ -198,53 +199,39 @@ private fun OverallWinrateChart(
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
                             text = stringResource(
-                                R.string.winrate_format,
-                                winrate.winPercentage
+                                R.string.winrate_format_with_games,
+                                winrate.winPercentage,
+                                winrate.wins,
+                                winrate.totalGames
                             ),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
 
-                    Row(
+                    Canvas(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(top = 4.dp),
-                        verticalAlignment = Alignment.CenterVertically
+                            .padding(top = 6.dp)
+                            .height(28.dp)
                     ) {
-                        Canvas(
-                            modifier = Modifier
-                                .weight(1f)
-                                .height(28.dp)
-                        ) {
-                            val barHeight = size.height
-                            val barWidth = size.width
+                        val barHeight = size.height
+                        val barWidth = size.width
 
+                        drawRoundRect(
+                            color = Color.Gray.copy(alpha = 0.2f),
+                            size = Size(barWidth, barHeight),
+                            cornerRadius = CornerRadius(6f, 6f)
+                        )
+
+                        if (winrate.totalGames > 0) {
+                            val winWidth = barWidth * (winrate.wins.toFloat() / winrate.totalGames)
                             drawRoundRect(
-                                color = Color.Gray.copy(alpha = 0.2f),
-                                size = Size(barWidth, barHeight),
+                                color = color,
+                                size = Size(winWidth, barHeight),
                                 cornerRadius = CornerRadius(6f, 6f)
                             )
-
-                            if (winrate.totalGames > 0) {
-                                val winWidth = barWidth * (winrate.wins.toFloat() / winrate.totalGames)
-                                drawRoundRect(
-                                    color = color,
-                                    size = Size(winWidth, barHeight),
-                                    cornerRadius = CornerRadius(6f, 6f)
-                                )
-                            }
                         }
-
-                        Spacer(modifier = Modifier.width(8.dp))
-
-                        Text(
-                            text = "${winrate.wins}/${winrate.totalGames}",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            modifier = Modifier.width(40.dp),
-                            textAlign = TextAlign.End
-                        )
                     }
                 }
             }

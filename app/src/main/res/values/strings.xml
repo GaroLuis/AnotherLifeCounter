@@ -37,6 +37,7 @@
     <string name="winrate_losses">Losses</string>
     <string name="winrate_games_played">Games: %1$d</string>
     <string name="winrate_format">%.0f%%</string>
+    <string name="winrate_format_with_games">%1$.0f%% (%2$d/%3$d)</string>
     <string name="winrate_no_head_to_head">Select two commanders to compare</string>
     <string name="winrate_vs">%1$s vs %2$s</string>
 </resources>
