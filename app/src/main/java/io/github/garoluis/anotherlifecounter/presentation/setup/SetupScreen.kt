@@ -360,6 +360,9 @@ fun SetupScreen(
                                                             it
                                                         )
                                                     },
+                                                    placeholder = {
+                                                        Text(text = "...")
+                                                    },
                                                     singleLine = true,
                                                     modifier = Modifier
                                                         .fillMaxWidth()

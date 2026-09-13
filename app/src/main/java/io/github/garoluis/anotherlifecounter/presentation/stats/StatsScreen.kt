@@ -274,6 +274,9 @@ private fun HeadToHeadSelectors(
                     ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedA)
                 },
                 singleLine = true,
+                placeholder = {
+                    Text(text = "...")
+                },
             )
             ExposedDropdownMenu(
                 expanded = expandedA,
@@ -317,6 +320,9 @@ private fun HeadToHeadSelectors(
                     ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedB)
                 },
                 singleLine = true,
+                placeholder = {
+                    Text(text = "...")
+                },
             )
             ExposedDropdownMenu(
                 expanded = expandedB,
