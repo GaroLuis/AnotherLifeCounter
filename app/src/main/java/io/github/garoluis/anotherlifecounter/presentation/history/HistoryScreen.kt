@@ -15,6 +15,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.EmojiEvents
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
@@ -44,6 +45,7 @@ import androidx.compose.ui.unit.dp
 import io.github.garoluis.anotherlifecounter.R
 import io.github.garoluis.anotherlifecounter.data.local.GameHistoryEntity
 import io.github.garoluis.anotherlifecounter.domain.model.Player
+import io.github.garoluis.anotherlifecounter.presentation.stats.StatsViewModel
 import io.github.garoluis.anotherlifecounter.ui.theme.Player1Accent
 import io.github.garoluis.anotherlifecounter.ui.theme.Player2Accent
 import io.github.garoluis.anotherlifecounter.ui.theme.Player3Accent
@@ -157,6 +159,8 @@ private fun GameHistoryItem(
         emptyList()
     }
 
+    val winner = StatsViewModel.determineWinner(players)
+
     val dateFormat = remember { SimpleDateFormat("MMM dd, yyyy  HH:mm", Locale.getDefault()) }
     val formattedDate = remember(game.timestamp) {
         dateFormat.format(Date(game.timestamp))
@@ -214,6 +218,15 @@ private fun GameHistoryItem(
                         Icon(
                             imageVector = Icons.Default.Star,
                             contentDescription = stringResource(R.string.content_description_starting_player),
+                            tint = accent,
+                            modifier = Modifier.height(15.dp)
+                        )
+                        Spacer(modifier = Modifier.width(4.dp))
+                    }
+                    if (winner != null && player.id == winner.id) {
+                        Icon(
+                            imageVector = Icons.Default.EmojiEvents,
+                            contentDescription = stringResource(R.string.content_description_winner),
                             tint = accent,
                             modifier = Modifier.height(15.dp)
                         )

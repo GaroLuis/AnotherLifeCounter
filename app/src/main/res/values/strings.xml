@@ -17,6 +17,7 @@
     <string name="content_description_saved">Saved</string>
     <string name="content_description_save_game">Save Game</string>
     <string name="content_description_starting_player">Starting player</string>
+    <string name="content_description_winner">Winner</string>
     <string name="content_description_delete_game">Delete game</string>
     <string name="content_description_navigation_back">Back</string>
     <string name="content_description_navigation_history">Go to history</string>
