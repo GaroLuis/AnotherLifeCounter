@@ -37,7 +37,7 @@ object ScryfallApi {
     suspend fun searchCommanders(query: String): List<String> = withContext(Dispatchers.IO) {
         if (query.isBlank()) return@withContext emptyList()
 
-        val url = "https://api.scryfall.com/cards/search?q=name:${query.trim()}+t:legendary+(t:creature+or+t:vehicle)"
+        val url = "https://api.scryfall.com/cards/search?q=name:${query.trim()}+t:legendary+(t:creature+or+t:vehicle+or+t:spacecraft)"
         val request = Request.Builder()
             .url(url)
             .header("User-Agent", "AnotherLifeCounter/1.0")
